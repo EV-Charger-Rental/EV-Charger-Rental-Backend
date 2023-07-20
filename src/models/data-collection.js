@@ -24,13 +24,16 @@ class DataCollection {
   }
 
   update = async (id, data) => {
-    const record = await this.model.findOne({ where: { id } });
+    console.log('id', id);
+    console.log('data', data);
+    const record = await this.model.findOne( { id } );
+    console.log('record', record);
     return record.update(data);
   }
   
 
   delete(id) {
-    return this.model.destroy({ where: { id }});
+    return this.model.destroy({ id });
   }
 
 }
