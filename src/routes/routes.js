@@ -21,6 +21,19 @@ authRouter.post('/signup', async (req, res, next) => {
   }
 });
 
+
+// http://localhost:3000/signup
+// {
+//   "username":"mohammad" ,
+//   "email":"www" ,
+//   "phone": "123",
+//   "location":"here" ,
+//   "password": "123",
+//   "role":"shipper"
+// }
+
+
+
 authRouter.post('/signin', basicAuth, (req, res, next) => {
   const user = {
     user: req.user,

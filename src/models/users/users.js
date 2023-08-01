@@ -8,8 +8,12 @@ const SECRET = process.env.SECRET || 'secretstring';
 const userModel = (sequelize, DataTypes) => {
   const model = sequelize.define('Users', {
     username: { type: DataTypes.STRING, required: true, unique: true },
+    email: { type: DataTypes.STRING, required: true, unique: true },
+    phone: { type: DataTypes.STRING, required: true, unique: true },
+    location: { type: DataTypes.STRING, required: true },
     password: { type: DataTypes.STRING, required: true },
-    role: { type: DataTypes.ENUM('user', 'writer', 'editor', 'admin'), required: true, defaultValue: 'user'},
+    // role: { type: DataTypes.ENUM('user', 'writer', 'editor', 'admin'), required: true, defaultValue: 'user'},
+    role: { type: DataTypes.ENUM('shipper', 'renter'), required: true, defaultValue: 'shipper'},
     token: {
       type: DataTypes.VIRTUAL,
       get() {
@@ -24,10 +28,12 @@ const userModel = (sequelize, DataTypes) => {
       type: DataTypes.VIRTUAL,
       get() {
         const acl = {
-          user: ['read'],
-          writer: ['read', 'create'],
-          editor: ['read', 'create', 'update'],
-          admin: ['read', 'create', 'update', 'delete']
+          // user: ['read'],
+          // writer: ['read', 'create'],
+          // editor: ['read', 'create', 'update'],
+          // admin: ['read', 'create', 'update', 'delete']
+          shipper : ['read', 'create', 'update', 'delete'],
+          renter : ['read', 'create', 'update', 'delete']
         };
         return acl[this.role];
       }

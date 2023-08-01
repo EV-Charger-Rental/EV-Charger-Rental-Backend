@@ -11,6 +11,8 @@ const permissions = require('../middleware/acl.js')
 
 router.param('model', (req, res, next) => {
   const modelName = req.params.model;
+  console.log('Available Models:', Object.keys(dataModules));
+  console.log('Model Name:', modelName);
   if (dataModules[modelName]) { 
     req.model = dataModules[modelName];
     console.log('req.model', dataModules[modelName]);
@@ -20,11 +22,48 @@ router.param('model', (req, res, next) => {
   }
 });
 
+// available models: [reviews, charger, reservation, users ]
+
 router.get('/:model',bearerAuth,permissions('read'),handleGetAll);
+
+// http://localhost:3000/api/v2/reviews
+
 router.get('/:model/:id',bearerAuth,permissions('read'), handleGetOne);
+
+// http://localhost:3000/api/v2/reviews/1
+// {
+//   "reviewer_id": 1,
+//   "target_id": 1,
+//   "rating": 5,
+//   "comment":"fff"
+// }
+
+
 router.post('/:model', bearerAuth,permissions('create'),handleCreate);
-router.put('/:model/:id',bearerAuth,permissions('update'), handleUpdate);
+
+// http://localhost:3000/api/v2/reviews
+// {
+//   "reviewer_id": 1,
+//   "target_id": 1,
+//   "rating": 5,
+//   "comment":"fff"
+// }
+
+
+router.put('/:model/:id', handleUpdate);
+
+// http://localhost:3000/api/v2/reviews/1
+// {
+//   "reviewer_id": 1,
+//   "target_id": 1,
+//   "rating": 5,
+//   "comment":"no please no no "
+// }
+
 router.delete('/:model/:id',bearerAuth,permissions('delete'), handleDelete);
+
+// http://localhost:3000/api/v2/reviews/1
+
 
 async function handleGetAll(req, res) {
   let allRecords = await req.model.get();
