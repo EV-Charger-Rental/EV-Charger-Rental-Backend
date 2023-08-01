@@ -11,7 +11,7 @@ const chargerModel = require('./charger/charger.js');
 const reservationModel = require('./reservations/reservations.js');
 const userModel = require('./users/users.js');
 const Collection = require('./data-collection.js');
-// const { use } = require('../routes/V2.js');
+
 
 
 
@@ -63,5 +63,8 @@ module.exports = {
   reviews: new Collection(reviews),
   charger: new Collection(charger),
   reservation: new Collection(reservation),
-  users: users
+  users: users,
+  originalReviews: reviews,
+  originalCharger: charger,
+  originalReservation: reservation,
 };

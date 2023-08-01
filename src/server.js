@@ -11,6 +11,7 @@ const logger = require('./middleware/logger.js');
 // const v1Routes = require('./routes/v1.js');
 const authRoutes = require('./routes/routes.js');
 const v2Routes = require('./routes/V2.js');
+const renterRoutes = require('./routes/renterRoutes.js');
 
 const app = express();
 
@@ -34,6 +35,9 @@ app.use(logger);
 app.use(authRoutes);
 // app.use('/api/v1', v1Routes);
 app.use('/api/v2', v2Routes);
+
+app.use('/api/renter', renterRoutes);
+
 // Catchalls
 app.use('*', notFoundHandler);
 app.use(errorHandler);
