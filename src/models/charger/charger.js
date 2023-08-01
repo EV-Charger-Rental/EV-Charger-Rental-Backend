@@ -13,7 +13,7 @@
 const dayjs = require('dayjs');
 
 const chargerModel = (sequelize, DataTypes) => sequelize.define('Charger', {
-    type: { type: DataTypes.STRING, required: true },
+    ChargerType: { type: DataTypes.STRING, required: true },
     status: {type: DataTypes.STRING,required: true,},
     owner_id: { type: DataTypes.INTEGER, required: true },
     price: { type: DataTypes.FLOAT, required: true },

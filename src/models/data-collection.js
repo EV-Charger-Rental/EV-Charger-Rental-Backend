@@ -79,41 +79,89 @@ class DataCollection {
   
   }
 
+////////////////////////////////////////////////////////////////////////
+//  getChargers(renterLocation,availability, chargerType) {
+//   const filters = {
+//     include: [
+//       {
+//         model: "user",
+//         as: 'shipper',
+//         where: {
+//           location: renterLocation,
+//           role: 'shipper',
+//         },
+//       },
+//     ],
+//     where: {
+//       location: renterLocation,
+//     },
+//   };
 
-  getChargers(renterLocation,availability,chargerType)
-  {
-    const filter = {
-      include: [
-        {
-          model: "user",
-          as: 'shipper',
-          where: {
-            location: renterLocation,
-            role: 'shipper', // Assuming only "shipper" users can own chargers
-          },
-        },
-      ],
-    };
+//   if (availability === "available") {
+//     filters.where.status = "available";
+//   }
 
-    if (availability === "avaliable" && chargerType) {
-      filter.where = {
-        ...filter.where,
-        status: availability,
-        type: chargerType,
-      };
-    }
+//   if (chargerType) {
+//     filters.where.type = chargerType;
+//   }
 
-  
-console.log("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ" , filter);
-    // Fetch chargers based on the provided filters
-    return this.model.findAll(where : );
+//   console.log("Filters:", filters);
+
+//   // Assuming you have a Charger model defined as chargerModel
+//   const chargers =  this.model.findAll(filters);
+//   return chargers;
+// }
+
+//   console.log("kkkkkkkkkkkkkkkkk");
+//   return this.model.findAll({
+//     where: {
+//       status: availability,
+//       ChargerType : chargerType
+//     }
+//   }); 
+//  }
+// }
+
+
+//***********************************************************//
+
+getChargers(renterLocation, availability, chargerType) {
+  const whereClause = {
+    location: renterLocation,
+  };
+
+  if (availability === "available") {
+    whereClause.status = "available";
   }
 
+  if (chargerType) {
+    whereClause.type = chargerType;
+  }
 
-  
-}
+  const chargers =  this.model.findAll({
+    include: [
+      {
+        model: "user",
+        as: "shipper",
+        where: {
+          location: renterLocation,
+          role: "shipper",
+        },
+      },
+    ],
+    where: whereClause,
+  });
+  console.log("Filters:",renterLocation );
 
-  
-
-
+  //   console.log("kkkkkkkkkkkkkkkkk");
+//   return this.model.findAll({
+//     where: {
+//       status: availability,
+//       ChargerType : chargerType
+//     }
+//   }); 
+//  }
+// }
+  return chargers;
+}}
 module.exports = DataCollection;
