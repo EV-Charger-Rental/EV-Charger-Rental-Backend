@@ -78,6 +78,38 @@ class DataCollection {
     }
   
   }
+
+
+  getChargers(renterLocation,availability,chargerType)
+  {
+    const filter = {
+      include: [
+        {
+          model: "user",
+          as: 'shipper',
+          where: {
+            location: renterLocation,
+            role: 'shipper', // Assuming only "shipper" users can own chargers
+          },
+        },
+      ],
+    };
+
+    if (availability === "avaliable" && chargerType) {
+      filter.where = {
+        ...filter.where,
+        status: availability,
+        type: chargerType,
+      };
+    }
+
+  
+console.log("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ" , filter);
+    // Fetch chargers based on the provided filters
+    return this.model.findAll(where : );
+  }
+
+
   
 }
 
