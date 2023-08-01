@@ -36,6 +36,52 @@ class DataCollection {
     return this.model.destroy({ id });
   }
 
+
+  ////////////////////////
+  getSession(statusTime, id) {
+    const currentTime = new Date();
+    console.log(">>>>>>>>>>",currentTime);
+    console.log(">>>>>>>>>>",statusTime);
+    console.log(">>>>>>>>>>",id);
+  
+    if (statusTime === "scheduled") {
+      return this.model.findAll({
+        where: {
+          shipper_id: id,
+          total_price: null,
+          start_time: {
+            [Op.lt]: currentTime, // Assuming you want start_time < currentTime
+          }
+        }
+      });
+    }
+    if (statusTime === "now") {
+      return this.model.findAll({
+        where: {
+          shipper_id: id,
+          total_price: null,
+          start_time: {
+            [Op.gt]: currentTime, 
+         }
+        }
+      });
+    }
+    
+    if(statusTime === "history") {
+      console.log("kkkk");
+      return this.model.findAll({
+        where: {
+          shipper_id: id,
+          total_price:{ [Op.ne]: null},
+        }
+      });
+    }
+  
+  }
+  
 }
+
+  
+
 
 module.exports = DataCollection;
