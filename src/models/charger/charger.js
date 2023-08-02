@@ -17,7 +17,7 @@ const chargerModel = (sequelize, DataTypes) => sequelize.define('Charger', {
     status: {type: DataTypes.STRING,required: true,},
     owner_id: { type: DataTypes.INTEGER, required: true },
     price: { type: DataTypes.FLOAT, required: true },
-    location: { type: DataTypes.STRING, required: true }
+    Chargerlocation: { type: DataTypes.STRING, required: true }
   });
 
 module.exports = chargerModel;

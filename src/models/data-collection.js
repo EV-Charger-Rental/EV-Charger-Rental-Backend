@@ -126,42 +126,14 @@ class DataCollection {
 //***********************************************************//
 
 getChargers(renterLocation, availability, chargerType) {
-  const whereClause = {
-    location: renterLocation,
-  };
+  console.log("kkkkkkkkkkkkkkkkk");
+  return this.model.findAll({
+    where: {
+      status: availability,
+      ChargerType : chargerType,
+      Chargerlocation :renterLocation
 
-  if (availability === "available") {
-    whereClause.status = "available";
-  }
-
-  if (chargerType) {
-    whereClause.type = chargerType;
-  }
-
-  const chargers =  this.model.findAll({
-    include: [
-      {
-        model: "user",
-        as: "shipper",
-        where: {
-          location: renterLocation,
-          role: "shipper",
-        },
-      },
-    ],
-    where: whereClause,
-  });
-  console.log("Filters:",renterLocation );
-
-  //   console.log("kkkkkkkkkkkkkkkkk");
-//   return this.model.findAll({
-//     where: {
-//       status: availability,
-//       ChargerType : chargerType
-//     }
-//   }); 
-//  }
-// }
-  return chargers;
+    }})
+ 
 }}
 module.exports = DataCollection;
