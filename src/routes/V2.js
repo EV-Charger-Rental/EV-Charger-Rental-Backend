@@ -118,15 +118,15 @@ async function handleGetOneBasedOntime(req, res) {
 
 
 ///////////////////////////////////////////////////////////////////////////////
-router.get('/:model',bearerAuth,permissions('read'), handleGetChargers);
+router.get('/:model/:renterLocation/:availability/:chargerType',bearerAuth,permissions('read'), handleGetChargers);
 
 async function handleGetChargers(req, res) {
 
-    const renterLocation = req.query.location; // Assuming the renter location is passed as a query parameter
-    const availability = req.query.availability; // Assuming the availability status is passed as a query parameter
-    const chargerType = req.query.type; // Assuming the charger type is passed as a query parameter
-
-    theRecord = await req.model.getChargers(renterLocation,availability,chargerType);
+   const renterLocation = req.params.renterLocation; // Assuming the renter location is passed as a query parameter
+    const availability = req.params.availability; // Assuming the availability status is passed as a query parameter
+    const chargerType = req.params.chargerType; // Assuming the charger type is passed as a query parameter
+    console.log(availability,chargerType)
+    let theRecord = await req.model.getChargers(renterLocation,availability,chargerType);
 
     res.json(theRecord);
   }

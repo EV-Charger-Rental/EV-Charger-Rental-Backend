@@ -56,8 +56,7 @@ charger.hasMany(reservation, { foreignKey: 'charger_id', sourceKey: 'id' });
 reservation.belongsTo(charger, { foreignKey: 'charger_id', targetKey: 'id' });
 
 
-location.hasMany(charger, { foreignKey: 'location', sourceKey: 'location' });
-user.belongsTo(charger, { foreignKey: 'location', targetKey: 'location' });
+
 
 
 
