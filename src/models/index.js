@@ -58,6 +58,8 @@ reservation.belongsTo(charger, { foreignKey: 'charger_id', targetKey: 'id' });
 
 
 
+
+
 module.exports = {
   db: sequelize,
   reviews: new Collection(reviews),

@@ -94,6 +94,45 @@ async function handleDelete(req, res) {
   let deletedRecord = await req.model.delete(id);
   res.status(200).json(deletedRecord);
 }
+//////////////////////////////////////////////
+
+router.get('/:model/:statusTime/:id',bearerAuth,permissions('read'), handleGetOneBasedOntime);
+
+async function handleGetOneBasedOntime(req, res) {
+
+  const statusTime=req.params.statusTime;
+  const id = req.params.id;
+
+  // console.log("*******************",id);
+  // console.log("*******************",statusTime);
+  let theRecord;
+  
+  theRecord = await req.model.getSession(statusTime,id);
+    console.log("*****************",theRecord);
+  
+
+  
+  res.status(200).json(theRecord);
+}
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+router.get('/:model/:renterLocation/:availability/:chargerType',bearerAuth,permissions('read'), handleGetChargers);
+
+async function handleGetChargers(req, res) {
+
+   const renterLocation = req.params.renterLocation; // Assuming the renter location is passed as a query parameter
+    const availability = req.params.availability; // Assuming the availability status is passed as a query parameter
+    const chargerType = req.params.chargerType; // Assuming the charger type is passed as a query parameter
+    console.log(availability,chargerType)
+    let theRecord = await req.model.getChargers(renterLocation,availability,chargerType);
+
+    res.json(theRecord);
+  }
+
+
+
 
 
 module.exports = router;
