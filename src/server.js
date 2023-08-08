@@ -20,7 +20,9 @@ const renterRoutes = require('./routes/renterRoutes.js');
 
 const app = express();
 const server = http.createServer(app);
+
 let io = socketIO(server);
+let notification = io.of ('/notification')
 
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')))
@@ -89,14 +91,48 @@ io.on('connection', socket => {
   });
 });
 
+// =========================================================================================================
 
+notification.on( 'connection', socket =>{
 
-
-
-
-
-
-
+  
+    console.log('A user connected.');
+  
+  
+    
+    socket.on('join-renter', () => {
+      console.log('Renter joined the system.');
+    });
+  
+    socket.on('join-shipper', () => {
+      console.log('Provider joined the system.');
+    //  console.log("*********************",chargerId);
+    });
+  
+    socket.on('send-request-for-charger', (chargerId) => {
+      console.log(`Renter sent a request for the shipper to rent the charger ${chargerId}`);
+      socket.broadcast.emit('received-request-for-charger', chargerId);
+     
+    });
+    io.emit('send-request-for-charger-from-renter-side')
+    io.emit('system received first notification')
+  
+    socket.on('shipper-accepted-request', (chargerId) => {
+      console.log(`Provider accepted the renter request for charger ${chargerId}`);
+    });
+  
+  
+    // socket.on('get-all', () => {
+    //   const flights = Object.values(queue.requests);
+    //   //socket.emit('flight', requests);
+    //   queue.requests = {};
+    //   console.log("*****************************",queue.requests);
+    // });
+  
+    socket.on('disconnect', () => {
+      console.log('A user disconnected.');
+    });
+  });
 //======================================================================================================================================== 
 //***************************************************************************************************//
 //***************************************************************************************************//
