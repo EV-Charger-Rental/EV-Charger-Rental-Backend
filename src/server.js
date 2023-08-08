@@ -8,6 +8,9 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 
+
+const {messagesModal,roomsModal}=require('./models/index.js');//to use in the socket.io
+
 let formatMessage = require('./utils/messages.js');
 const notFoundHandler = require('./error-handlers/404.js');
 const errorHandler = require('./error-handlers/500.js');
@@ -16,6 +19,11 @@ const logger = require('./middleware/logger.js');
 const authRoutes = require('./routes/routes.js');
 const v2Routes = require('./routes/V2.js');
 const renterRoutes = require('./routes/renterRoutes.js');
+const { messages } = require('./models');
+const messagesModel = require('./models/messagesTable/messages');
+const { privateMessagesModal } = require('./models');
+const { Op } = require('sequelize');
+
 
 
 const app = express();
@@ -23,6 +31,7 @@ const server = http.createServer(app);
 
 let io = socketIO(server);
 let notification = io.of ('/notification')
+let peerTOpeer= io.of('/peer-to-peer');
 
 // set static folder
 app.use(express.static(path.join(__dirname, 'public')))
@@ -35,8 +44,10 @@ app.get('/', (req, res) => {
   res.send('Welcome to the Home Page');
 });
 // =======================================================================================================================
-//soket.io
-// run when client connects
+
+//rooms socket.io
+
+
 io.on('connection', socket => {
 
   socket.on('joinRoom', ({ username, room }) => {
@@ -65,7 +76,7 @@ io.on('connection', socket => {
 
 
 
-  // runs when client disconnects
+  
   socket.on('disconnect', () => {
       const user = userLeave(socket.id);
 
@@ -86,10 +97,116 @@ io.on('connection', socket => {
   // listen for chatMessage
   socket.on('chatMessage', (msg) => {
       const user = getCurrentUser(socket.id);
+      let storeMessage = messagesModal.create({
+        message: msg,
+        room_name: user.room,
+        username: user.username,
+
+      });
       io.to(user.room).emit('message', formatMessage(user.username, msg));
   });
+
+
+  // listen for chatMessage
+  socket.on('getMessages', (room) => {
+    let messages = messagesModal.findAll({ where: { room_name: room } });
+    messages.then((messages) => {
+      console.log('============>',messages);
+      socket.emit('perviousMessages', messages);
+    });
+  });
+
+
   });
 });
+ 
+// =======================================================================================================================
+
+//peer to peer socket.io
+
+const connectedClients = {};
+
+peerTOpeer.on('connection', socket => {
+
+  socket.on('checkin user', name => {
+    connectedClients[name] = socket
+    // console.log('connectedClients', connectedClients);
+    // console log the keys only
+    console.log('connectedClients', Object.keys(connectedClients));
+});
+
+
+socket.on('checkout users a vailabilty', plugOwner => {
+    if (connectedClients[plugOwner]) {
+        socket.emit('plugOwner online', plugOwner);
+    }else{
+        console.log('user not found')
+        socket.emit('plugOwner offline', 'user is currently offline')}
+    
+})
+
+
+socket.on('private message', ({plugOwner,msg,username}) => {
+    console.log('PrivateMessage', msg);
+    console.log('plugOwner', plugOwner);
+
+    const privateMessage = privateMessagesModal.create({
+        message: msg,
+        sender: username,
+        receiver: plugOwner,
+    });
+
+    if (connectedClients[plugOwner]) {
+        connectedClients[plugOwner].emit('private message', {plugOwner,msg,username});
+    }else{
+        console.log('user not found')
+        socket.emit('disconnected user', 'user is currently offline')}
+    
+}
+);
+
+
+
+//get the messages history between two users
+
+//get the messages history between two users
+socket.on('getpreviousPrivateMessages', ({ plugOwner, username }) => {
+  console.log('===================plugOwner', plugOwner);
+  console.log('===================username', username);
+
+  const messagesPromise = privateMessagesModal.findAll({
+    where: {
+      [Op.or]: [
+        { sender: plugOwner, receiver: username },
+        { sender: username, receiver: plugOwner }
+      ]
+    },
+    order: [['createdAt', 'ASC']]
+  });
+
+  messagesPromise.then((messages) => {
+    console.log('this is the messages ============>', messages);
+    socket.emit('perviousPrivateMessages', messages);
+  }).catch((error) => {
+    console.error('Error fetching previous private messages:', error);
+  });
+});
+
+
+
+//handle client disconnect
+
+socket.on('disconnect',()=>{
+    //delete the user from connectedClients
+    delete connectedClients[socket.id];
+
+})
+});
+
+
+
+
+
 
 // =========================================================================================================
 
