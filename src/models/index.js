@@ -56,8 +56,10 @@ reservation.belongsTo(charger, { foreignKey: 'charger_id', targetKey: 'id' });
 messages.hasMany(rooms,{foreignKey:'room_id',sourceKey:'id'});
 rooms.belongsTo(messages,{foreignKey:'room_id',targetKey:'id'});
 
-users.hasMany(privateMessages,{foreignKey:'sender',sourceKey:'id'});
-privateMessages.belongsTo(users,{foreignKey:'sender',targetKey:'id'});
+//fixed this
+
+users.hasMany(privateMessages,{foreignKey:'sender',sourceKey:'username'});
+privateMessages.belongsTo(users,{foreignKey:'sender',targetKey:'username'});
 
 
 
