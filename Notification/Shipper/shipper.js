@@ -2,7 +2,7 @@
 require('dotenv').config();
 const port = process.env.PORT || 3001;
 const io = require('socket.io-client');
-const host = `http://localhost:${port}/`;
+const host = `http://localhost:${port}/notification`;
 const SystemConnection = io.connect(host);
 
 
