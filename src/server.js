@@ -68,15 +68,6 @@ io.on('connection', socket => {
       users: getRoomUsers(user.room)
   });
   
-//_____________________________________________________________________________________________________________________________________
-
-
-
-//_____________________________________________________________________________________________________________________________________
-
-
-
-  
   socket.on('disconnect', () => {
       const user = userLeave(socket.id);
 
@@ -90,8 +81,6 @@ io.on('connection', socket => {
               users: getRoomUsers(user.room)
           });
       }
-
-      // io.emit('message', formatMessage(botName, `'${user.username} has left the chat''`));
   });
 
   // listen for chatMessage
@@ -165,10 +154,6 @@ socket.on('private message', ({plugOwner,msg,username}) => {
 }
 );
 
-
-
-//get the messages history between two users
-
 //get the messages history between two users
 socket.on('getpreviousPrivateMessages', ({ plugOwner, username }) => {
   console.log('===================plugOwner', plugOwner);
@@ -192,8 +177,6 @@ socket.on('getpreviousPrivateMessages', ({ plugOwner, username }) => {
   });
 });
 
-
-
 //handle client disconnect
 
 socket.on('disconnect',()=>{
@@ -202,11 +185,6 @@ socket.on('disconnect',()=>{
 
 })
 });
-
-
-
-
-
 
 // =========================================================================================================
 
