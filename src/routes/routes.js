@@ -2,7 +2,6 @@
 
 const express = require('express');
 const authRouter = express.Router();
-
 const { users } = require('../models/index.js');
 const basicAuth = require('../middleware/basic.js')
 const bearerAuth = require('../middleware/bearer.js')
@@ -20,18 +19,6 @@ authRouter.post('/signup', async (req, res, next) => {
     next(e.message)
   }
 });
-
-
-// http://localhost:3000/signup
-// {
-//   "username":"mohammad" ,
-//   "email":"www" ,
-//   "phone": "123",
-//   "location":"here" ,
-//   "password": "123",
-//   "role":"shipper"
-// }
-
 
 
 authRouter.post('/signin', basicAuth, (req, res, next) => {

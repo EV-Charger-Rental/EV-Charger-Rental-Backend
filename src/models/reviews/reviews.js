@@ -1,13 +1,3 @@
-// +------------------------+
-// |        Review          |
-// +------------------------+
-// | id (PK)                |
-// | reviewer_id (FK)       |
-// | target_id (FK)         |
-// | rating                 |
-// | comment                |
-// +------------------------+
-
 'use strict';
 const reviewsModel = (sequelize, DataTypes) => sequelize.define('Reviews', {
     reviewer_id: { type: DataTypes.INTEGER, required: true },

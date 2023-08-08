@@ -2,9 +2,7 @@
 
 const express = require('express');
 const dataModules = require('../models');
-
 const router = express.Router();
-
 const basicAuth = require('../middleware/basic.js')
 const bearerAuth = require('../middleware/bearer.js')
 const permissions = require('../middleware/acl.js')
@@ -13,7 +11,7 @@ router.param('model', (req, res, next) => {
   const modelName = req.params.model;
   console.log('Available Models:', Object.keys(dataModules));
   console.log('Model Name:', modelName);
-  if (dataModules[modelName]) { 
+  if (dataModules[modelName]) {
     req.model = dataModules[modelName];
     console.log('req.model', dataModules[modelName]);
     next();
@@ -22,47 +20,15 @@ router.param('model', (req, res, next) => {
   }
 });
 
-// available models: [reviews, charger, reservation, users ]
-
-router.get('/:model',bearerAuth,permissions('read'),handleGetAll);
-
-// http://localhost:3000/api/v2/reviews
-
-router.get('/:model/:id',bearerAuth,permissions('read'), handleGetOne);
-
-// http://localhost:3000/api/v2/reviews/1
-// {
-//   "reviewer_id": 1,
-//   "target_id": 1,
-//   "rating": 5,
-//   "comment":"fff"
-// }
-
-
-router.post('/:model', bearerAuth,permissions('create'),handleCreate);
-
-// http://localhost:3000/api/v2/reviews
-// {
-//   "reviewer_id": 1,
-//   "target_id": 1,
-//   "rating": 5,
-//   "comment":"fff"
-// }
-
-
+router.get('/:model', bearerAuth, permissions('read'), handleGetAll);
+router.get('/:model/:id', bearerAuth, permissions('read'), handleGetOne);
+router.post('/:model', bearerAuth, permissions('create'), handleCreate);
 router.put('/:model/:id', handleUpdate);
-
-// http://localhost:3000/api/v2/reviews/1
-// {
-//   "reviewer_id": 1,
-//   "target_id": 1,
-//   "rating": 5,
-//   "comment":"no please no no "
-// }
-
-router.delete('/:model/:id',bearerAuth,permissions('delete'), handleDelete);
-
-// http://localhost:3000/api/v2/reviews/1
+router.delete('/:model/:id', bearerAuth, permissions('delete'), handleDelete);
+router.get('/:model/:statusTime/:id', bearerAuth, permissions('read'), handleGetOneBasedOntime);
+router.get('/:model/:renterLocation/:availability/:chargerType', bearerAuth, permissions('read'), handleGetChargers);
+router.get('/:model/:id/:shipper/all/plugTime', bearerAuth, permissions('read'), handleGetAllShipperReservations);
+router.get('/:model/:id/:renter/all/plugTime', bearerAuth, permissions('read'), handleGetAllRenterReservations);
 
 
 async function handleGetAll(req, res) {
@@ -94,59 +60,39 @@ async function handleDelete(req, res) {
   let deletedRecord = await req.model.delete(id);
   res.status(200).json(deletedRecord);
 }
-//////////////////////////////////////////////
 
-router.get('/:model/:statusTime/:id',bearerAuth,permissions('read'), handleGetOneBasedOntime);
 
 async function handleGetOneBasedOntime(req, res) {
-
-  const statusTime=req.params.statusTime;
+  const statusTime = req.params.statusTime;
   const id = req.params.id;
-
-  // console.log("*******************",id);
-  // console.log("*******************",statusTime);
   let theRecord;
-  
-  theRecord = await req.model.getSession(statusTime,id);
-    console.log("*****************",theRecord);
-  
-
-  
+  theRecord = await req.model.getSession(statusTime, id);
   res.status(200).json(theRecord);
 }
 
 
-
-///////////////////////////////////////////////////////////////////////////////
-router.get('/:model/:renterLocation/:availability/:chargerType',bearerAuth,permissions('read'), handleGetChargers);
-
 async function handleGetChargers(req, res) {
-
-   const renterLocation = req.params.renterLocation; // Assuming the renter location is passed as a query parameter
-    const availability = req.params.availability; // Assuming the availability status is passed as a query parameter
-    const chargerType = req.params.chargerType; // Assuming the charger type is passed as a query parameter
-    console.log(availability,chargerType)
-    let theRecord = await req.model.getChargers(renterLocation,availability,chargerType);
-
-    res.json(theRecord);
-  }
+  const renterLocation = req.params.renterLocation;
+  const availability = req.params.availability;
+  const chargerType = req.params.chargerType;
+  console.log(availability, chargerType)
+  let theRecord = await req.model.getChargers(renterLocation, availability, chargerType);
+  res.json(theRecord);
+}
 
 
-//////////////////////////////////////////////////////////////////////////
-router.get('/:model/:id/:shipper/ev/eu',bearerAuth,permissions('read'), handleGetAllShipperReservations);
 async function handleGetAllShipperReservations(req, res) {
   const id = req.params.id;
   const shipper = req.params.shipper;
-  let theRecord = await req.model.getShipperReservations(id,shipper)
+  let theRecord = await req.model.getShipperReservations(id, shipper)
   res.status(200).json(theRecord);
 }
 
 
-router.get('/:model/:id/:renter/ev/eu',bearerAuth,permissions('read'), handleGetAllRenterReservations);
 async function handleGetAllRenterReservations(req, res) {
-  const id = req.params.id;
+  const id = req.params.id
   const renter = req.params.renter;
-  let theRecord = await req.model.getShipperReservations(id,renter)
+  let theRecord = await req.model.getShipperReservations(id, renter)
   res.status(200).json(theRecord);
 }
 
