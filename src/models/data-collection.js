@@ -1,5 +1,5 @@
 'use strict';
-
+const { Op } = require('sequelize');
 // THIS IS THE STRETCH GOAL ...
 // It takes in a schema in the constructor and uses that instead of every collection
 // being the same and requiring their own schema. That's not very DRY!
@@ -33,7 +33,7 @@ class DataCollection {
   
 
   delete(id) {
-    return this.model.destroy({ id });
+    return this.model.destroy({ where: { id:id} });
   }
 
 
@@ -72,7 +72,7 @@ class DataCollection {
       return this.model.findAll({
         where: {
           shipper_id: id,
-          total_price:{ [Op.ne]: null},
+          total_price:{ [Op.ne]: null}, 
         }
       });
     }
@@ -134,6 +134,30 @@ getChargers(renterLocation, availability, chargerType) {
       Chargerlocation :renterLocation
 
     }})
+
+
+   
  
+}
+getShipperReservations(id,shipper)
+{
+  if(shipper=="shipper")
+  {
+    return this.model.findAll({
+      where: {
+        shipper_id: id}})
+  }
+  else
+  {
+    return this.model.findAll({
+      where: {
+        renter_id: id}})
+  }
+
+  
+
 }}
+
+
+
 module.exports = DataCollection;

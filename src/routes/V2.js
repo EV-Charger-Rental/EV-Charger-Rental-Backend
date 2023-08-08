@@ -132,6 +132,23 @@ async function handleGetChargers(req, res) {
   }
 
 
+//////////////////////////////////////////////////////////////////////////
+router.get('/:model/:id/:shipper/ev/eu',bearerAuth,permissions('read'), handleGetAllShipperReservations);
+async function handleGetAllShipperReservations(req, res) {
+  const id = req.params.id;
+  const shipper = req.params.shipper;
+  let theRecord = await req.model.getShipperReservations(id,shipper)
+  res.status(200).json(theRecord);
+}
+
+
+router.get('/:model/:id/:renter/ev/eu',bearerAuth,permissions('read'), handleGetAllRenterReservations);
+async function handleGetAllRenterReservations(req, res) {
+  const id = req.params.id;
+  const renter = req.params.renter;
+  let theRecord = await req.model.getShipperReservations(id,renter)
+  res.status(200).json(theRecord);
+}
 
 
 
