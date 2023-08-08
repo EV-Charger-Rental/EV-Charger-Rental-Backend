@@ -182,29 +182,6 @@
 // // }
 
 
-module.exports = router;
+// module.exports = router;
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<<<<<<< HEAD
-=======
-// // module.exports = router;
->>>>>>> main

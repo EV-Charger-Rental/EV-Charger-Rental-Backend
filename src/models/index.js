@@ -10,6 +10,9 @@ const reviewsModel = require('./reviews/reviews.js');
 const chargerModel = require('./charger/charger.js');
 const reservationModel = require('./reservations/reservations.js');
 const userModel = require('./users/users.js');
+const messagesModel=require('./messagesTable/messages.js');
+const roomsModel=require('./rooms/rooms.js');
+const privateMessagesModel=require('./messagesTable/privateMessages.js');
 const Collection = require('./data-collection.js');
 
 
@@ -35,6 +38,9 @@ const users = userModel(sequelize, DataTypes);
 const reviews = reviewsModel(sequelize, DataTypes);
 const charger = chargerModel(sequelize, DataTypes);
 const reservation = reservationModel(sequelize, DataTypes);
+const messages=messagesModel(sequelize,DataTypes);
+const rooms=roomsModel(sequelize,DataTypes);
+const privateMessages=privateMessagesModel(sequelize,DataTypes);
 
 
 users.hasMany(reviews, { foreignKey: 'reviewer_id', sourceKey: 'id' });
@@ -55,6 +61,15 @@ reservation.belongsTo(users, { foreignKey: 'shipper_id', targetKey: 'id' });
 charger.hasMany(reservation, { foreignKey: 'charger_id', sourceKey: 'id' });
 reservation.belongsTo(charger, { foreignKey: 'charger_id', targetKey: 'id' });
 
+messages.hasMany(rooms,{foreignKey:'room_id',sourceKey:'id'});
+rooms.belongsTo(messages,{foreignKey:'room_id',targetKey:'id'});
+
+// users.hasMany(messages,{foreignKey:'user_id',sourceKey:'id'});
+// messages.belongsTo(users,{foreignKey:'user_id',targetKey:'id'});
+
+users.hasMany(privateMessages,{foreignKey:'sender',sourceKey:'id'});
+privateMessages.belongsTo(users,{foreignKey:'sender',targetKey:'id'});
+
 
 
 
@@ -69,4 +84,7 @@ module.exports = {
   originalReviews: reviews,
   originalCharger: charger,
   originalReservation: reservation,
+  messagesModal: messages,
+  roomsModal: rooms,
+  privateMessagesModal: privateMessages,
 };
