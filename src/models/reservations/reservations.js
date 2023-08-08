@@ -1,14 +1,3 @@
-// +------------------------+
-// |      Reservation       |
-// +------------------------+
-// | id (PK)                |
-// | charger_id (FK)        |
-// | renter_id (FK)         |
-// | shipper_id (FK)        |
-// | start_time             |
-// | end_time               |
-// | total_price            |
-// +------------------------+
 'use strict';
 const dayjs = require('dayjs');
 
@@ -23,7 +12,7 @@ const reservationModel = (sequelize, DataTypes) => {
     total_price: { type: DataTypes.FLOAT, allowNull: true },
   });
 
-  
+
   Reservation.addHook('beforeCreate', async (reservation) => {
     console.log('reservation============>', reservation);
     const now = dayjs();

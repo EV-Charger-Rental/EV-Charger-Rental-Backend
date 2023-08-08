@@ -1,5 +1,3 @@
-//private messages table
-
 "use strict";
 
 const privateMessagesModel = (sequelize, DataTypes) => sequelize.define('PrivateMessages', {

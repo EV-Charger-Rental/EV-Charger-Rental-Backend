@@ -1,4 +1,3 @@
-// table to store messages 
 "use strict"
 
 const messagesModel = (sequelize, DataTypes) => sequelize.define('Messages', {
@@ -7,6 +6,5 @@ const messagesModel = (sequelize, DataTypes) => sequelize.define('Messages', {
     username: { type: DataTypes.STRING, required: true },
 
 });
-
 
 module.exports = messagesModel;
