@@ -8,12 +8,12 @@ const SystemConnection = io.connect(host);
 
 
 //SystemConnection.emit('get-all');
-SystemConnection.emit('join-shipper');
+SystemConnection.emit('join-Provider');
 
 SystemConnection.on('received-request-for-charger', (chargerId) => {
   console.log(`received a request for charger ${chargerId}`);
   console.log(`Provider accepted the renter request for charger ${chargerId}`);
-  SystemConnection.emit('shipper-accepted-request', chargerId);
+  SystemConnection.emit('Provider-accepted-request', chargerId);
 });
 
 // SystemConnection.on('connect', () => {
@@ -21,7 +21,7 @@ SystemConnection.on('received-request-for-charger', (chargerId) => {
 
   SystemConnection.on('reconnect', () => {
     console.log('Provider reconnected to the system.');
-    SystemConnection.emit('join-shipper'); // Rejoin the shipper room
+    SystemConnection.emit('join-Provider'); // Rejoin the shipper room
     // You can request missing notifications or perform any other necessary actions here
   });
 

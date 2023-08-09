@@ -199,21 +199,22 @@ notification.on( 'connection', socket =>{
       console.log('Renter joined the system.');
     });
   
-    socket.on('join-shipper', () => {
+    socket.on('join-Provider', () => {
       console.log('Provider joined the system.');
     //  console.log("*********************",chargerId);
     });
   
     socket.on('send-request-for-charger', (chargerId) => {
-      console.log(`Renter sent a request for the shipper to rent the charger ${chargerId}`);
+      console.log(`Renter sent a request for the Provider to rent the charger ${chargerId}`);
       socket.broadcast.emit('received-request-for-charger', chargerId);
      
     });
     io.emit('send-request-for-charger-from-renter-side')
-    io.emit('system received first notification')
   
-    socket.on('shipper-accepted-request', (chargerId) => {
+    socket.on('Provider-accepted-request', (chargerId) => {
       console.log(`Provider accepted the renter request for charger ${chargerId}`);
+      notification.emit('system received first notification');
+
     });
   
   

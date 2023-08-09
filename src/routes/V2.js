@@ -25,10 +25,10 @@ router.get('/:model/:id', bearerAuth, permissions('read'), handleGetOne);
 router.post('/:model', bearerAuth, permissions('create'), handleCreate);
 router.put('/:model/:id', handleUpdate);
 router.delete('/:model/:id', bearerAuth, permissions('delete'), handleDelete);
-router.get('/:model/:statusTime/:id', bearerAuth, permissions('read'), handleGetOneBasedOntime);
+//router.get('/:model/:statusTime/:id', bearerAuth, permissions('read'), handleGetOneBasedOntime);
 router.get('/:model/:renterLocation/:availability/:chargerType', bearerAuth, permissions('read'), handleGetChargers);
-router.get('/:model/:id/:shipper/all/plugTime', bearerAuth, permissions('read'), handleGetAllShipperReservations);
-router.get('/:model/:id/:renter/all/plugTime', bearerAuth, permissions('read'), handleGetAllRenterReservations);
+router.get('/:model/:id/:Provider/:statusTime/plugTime', bearerAuth, permissions('read'), handleGetAllProviderReservations);
+router.get('/:model/:id/:renter/:statusTime/plugTime', bearerAuth, permissions('read'), handleGetAllRenterReservations);
 
 
 async function handleGetAll(req, res) {
@@ -62,13 +62,13 @@ async function handleDelete(req, res) {
 }
 
 
-async function handleGetOneBasedOntime(req, res) {
-  const statusTime = req.params.statusTime;
-  const id = req.params.id;
-  let theRecord;
-  theRecord = await req.model.getSession(statusTime, id);
-  res.status(200).json(theRecord);
-}
+// async function handleGetOneBasedOntime(req, res) {
+//   const statusTime = req.params.statusTime;
+//   const id = req.params.id;
+//   let theRecord;
+//   theRecord = await req.model.getSession(statusTime, id);
+//   res.status(200).json(theRecord);
+// }
 
 
 async function handleGetChargers(req, res) {
@@ -81,18 +81,20 @@ async function handleGetChargers(req, res) {
 }
 
 
-async function handleGetAllShipperReservations(req, res) {
+async function handleGetAllProviderReservations(req, res) {
   const id = req.params.id;
-  const shipper = req.params.shipper;
-  let theRecord = await req.model.getShipperReservations(id, shipper)
+  const statusTime = req.params.statusTime;
+  const Provider= req.params.Provider;
+  let theRecord = await req.model.getProviderReservations(id, Provider,statusTime)
   res.status(200).json(theRecord);
 }
 
 
 async function handleGetAllRenterReservations(req, res) {
-  const id = req.params.id
+  const id = req.params.id;
+  const statusTime = req.params.statusTime;
   const renter = req.params.renter;
-  let theRecord = await req.model.getShipperReservations(id, renter)
+  let theRecord = await req.model.getProviderReservations(id, renter,statusTime)
   res.status(200).json(theRecord);
 }
 
