@@ -13,7 +13,7 @@ const userModel = (sequelize, DataTypes) => {
     location: { type: DataTypes.STRING, required: true },
     password: { type: DataTypes.STRING, required: true },
     // role: { type: DataTypes.ENUM('user', 'writer', 'editor', 'admin'), required: true, defaultValue: 'user'},
-    role: { type: DataTypes.ENUM('shipper', 'renter'), required: true, defaultValue: 'shipper'},
+    role: { type: DataTypes.ENUM('Provider', 'renter'), required: true, defaultValue: 'Provider'},
     token: {
       type: DataTypes.VIRTUAL,
       get() {
@@ -32,7 +32,7 @@ const userModel = (sequelize, DataTypes) => {
           // writer: ['read', 'create'],
           // editor: ['read', 'create', 'update'],
           // admin: ['read', 'create', 'update', 'delete']
-          shipper : ['read', 'create', 'update', 'delete'],
+          Provider : ['read', 'create', 'update', 'delete'],
           renter : ['read', 'create', 'update', 'delete']
         };
         return acl[this.role];

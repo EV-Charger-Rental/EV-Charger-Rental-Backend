@@ -12,12 +12,12 @@ SystemConnection.on('connect', () => {
   setInterval(() => {
     const chargerId = Math.floor(Math.random() * 10) + 1;
     SystemConnection.emit('send-request-for-charger', chargerId);
-    console.log(`Renter sent a request for the shipper to rent the charger ${chargerId}`);
+    console.log(`Renter sent a request for the Provider to rent the charger ${chargerId}`);
   }, 5000); 
 });
 
 SystemConnection.on('send-request-for-charger-from-renter-side', (chargerId) => {
-  console.log(`Renter sent a request for the shipper to rent the charger ${chargerId}`);
+  console.log(`Renter sent a request for the Provider to rent the charger ${chargerId}`);
   SystemConnection.emit('system received first notification');
 });
 

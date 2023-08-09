@@ -1,9 +1,11 @@
 'use strict';
+const Sequelize = require('sequelize');
 const { Op } = require('sequelize');
 class DataCollection {
-
-  constructor(model) {
+ 
+  constructor(model,Op) {
     this.model = model;
+    this.Op = Op;
   }
 
   get(id) {
@@ -33,23 +35,28 @@ class DataCollection {
   }
 
 
-  getSession(statusTime, id) {
+
+
+  getChargers(renterLocation, availability, chargerType) {
+    return this.model.findAll({
+      where: {
+        status: availability,
+        ChargerType: chargerType,
+        Chargerlocation: renterLocation
+      }
+    })}
+
+ 
+
+  
+  getProviderReservations(id, Provider,statusTime) {
     const currentTime = new Date();
-    if (statusTime === "scheduled") {
+    if (Provider == "Provider") {
+  
+  if (statusTime === "now") {
       return this.model.findAll({
         where: {
-          shipper_id: id,
-          total_price: null,
-          start_time: {
-            [Op.lt]: currentTime,
-          }
-        }
-      });
-    }
-    if (statusTime === "now") {
-      return this.model.findAll({
-        where: {
-          shipper_id: id,
+          Provider_id: id,
           total_price: null,
           start_time: {
             [Op.gt]: currentTime,
@@ -61,40 +68,41 @@ class DataCollection {
     if (statusTime === "history") {
       return this.model.findAll({
         where: {
-          shipper_id: id,
+          Provider_id: id,
+          total_price: { [Op.ne]: null },
+        }
+      });
+    }
+  }
+  
+    
+
+    else {
+     if (statusTime === "now") {
+      return this.model.findAll({
+        where: {
+          renter_id: id,
+          total_price: null,
+          start_time: {
+            [Op.gt]: currentTime,
+          }
+        }
+      });
+    }
+
+    if (statusTime === "history") {
+      return this.model.findAll({
+        where: {
+          renter_id: id,
           total_price: { [Op.ne]: null },
         }
       });
     }
   }
 
-  getChargers(renterLocation, availability, chargerType) {
-    return this.model.findAll({
-      where: {
-        status: availability,
-        ChargerType: chargerType,
-        Chargerlocation: renterLocation
-      }
-    })}
+}}
 
-  getShipperReservations(id, shipper) {
-    if (shipper == "shipper") {
-      return this.model.findAll({
-        where: {
-          shipper_id: id
-        }
-      })
-    }
-    else {
-      return this.model.findAll({
-        where: {
-          renter_id: id
-        }
-      })
-    }
 
-  }
-}
 
 
 
