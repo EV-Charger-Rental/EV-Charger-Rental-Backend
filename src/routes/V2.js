@@ -98,6 +98,68 @@ async function handleGetAllRenterReservations(req, res) {
   res.status(200).json(theRecord);
 }
 
+// Add a route to check if a username is available
+router.post('/check-username', checkUsernameAvailability);
 
+async function checkUsernameAvailability(req, res) {
+  const { username } = req.body;
+
+  try {
+    // Query your database to check if the username exists
+    // Replace this with your actual database query
+    const usernameExists = await req.model.checkUsername(username);
+
+    if (usernameExists) {
+      res.status(409).json({ message: "Username is already taken" });
+    } else {
+      res.status(200).json({ message: "Username is available" });
+    }
+  } catch (error) {
+    console.error("Error checking username availability:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+// Add a route to check if an email is available
+router.post('/check-email', checkEmailAvailability);
+
+async function checkEmailAvailability(req, res) {
+  const { email } = req.body;
+
+  try {
+    // Query your database to check if the email exists
+    // Replace this with your actual database query
+    const emailExists = await req.model.checkEmail(email);
+
+    if (emailExists) {
+      res.status(409).json({ message: "Email is already taken" });
+    } else {
+      res.status(200).json({ message: "Email is available" });
+    }
+  } catch (error) {
+    console.error("Error checking email availability:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
+// Add a route to check if a phone number is available
+router.post('/check-phone', checkPhoneAvailability);
+
+async function checkPhoneAvailability(req, res) {
+  const { phone } = req.body;
+
+  try {
+    // Query your database to check if the phone number exists
+    // Replace this with your actual database query
+    const phoneExists = await req.model.checkPhone(phone);
+
+    if (phoneExists) {
+      res.status(409).json({ message: "Phone number is already taken" });
+    } else {
+      res.status(200).json({ message: "Phone number is available" });
+    }
+  } catch (error) {
+    console.error("Error checking phone number availability:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 module.exports = router;
