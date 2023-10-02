@@ -41,8 +41,8 @@ reviews.belongsTo(users, { foreignKey: 'reviewer_id', targetKey: 'id' });
 users.hasMany(reviews, { foreignKey: 'target_id', sourceKey: 'id' });
 reviews.belongsTo(users, { foreignKey: 'target_id', targetKey: 'id' });
 
-users.hasMany(charger, { foreignKey: 'owner_id', sourceKey: 'id' });
-charger.belongsTo(users, { foreignKey: 'owner_id', targetKey: 'id' });
+users.hasMany(charger, { foreignKey: 'username', sourceKey: 'username' });
+charger.belongsTo(users, { foreignKey: 'username', targetKey: 'username' });
 
 users.hasMany(reservation, { foreignKey: 'renter_id', sourceKey: 'id' });
 reservation.belongsTo(users, { foreignKey: 'renter_id', targetKey: 'id' });
