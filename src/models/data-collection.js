@@ -52,7 +52,6 @@ class DataCollection {
       });
     }
  
-
   
   getProviderReservations(id, Provider,statusTime) {
     const currentTime = new Date();
