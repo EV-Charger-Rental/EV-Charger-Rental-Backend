@@ -42,10 +42,21 @@ async function handleGetOne(req, res) {
   res.status(200).json(theRecord);
 }
 
+// async function handleCreate(req, res) {
+//   let obj = req.body;
+//   let newRecord = await req.model.create(obj);
+//   res.status(201).json(newRecord);
+// }
+
+
 async function handleCreate(req, res) {
   let obj = req.body;
+  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaa", obj);
   let newRecord = await req.model.create(obj);
+  console.log("bbbbbbbbbbbbb", obj);
   res.status(201).json(newRecord);
+
+ 
 }
 
 async function handleUpdate(req, res) {
@@ -101,3 +112,20 @@ async function handleGetAllRenterReservations(req, res) {
 
 
 module.exports = router;
+
+
+// Inside your model
+// Update the route to use async/await
+router.get('/:model/user-chargers', bearerAuth, permissions('read'), handleGetUserChargers);
+
+async function handleGetUserChargers(req, res) {
+  try {
+    const userId = req.user.id; // Get the ID of the currently logged-in user
+    const userChargers = await req.model.getUserChargers(userId);
+    res.status(200).json(userChargers);
+  } catch (error) {
+    console.error('Error getting user chargers:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
