@@ -46,6 +46,11 @@ class DataCollection {
       }
     })}
 
+   getUserChargers(userId) {
+      return this.model.findAll({
+        where: { owner_id: userId },
+      });
+    }
  
 
   
