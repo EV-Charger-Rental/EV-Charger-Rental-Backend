@@ -24,7 +24,7 @@ class DataCollection {
   update = async (id, data) => {
     console.log('id', id);
     console.log('data', data);
-    const record = await this.model.findOne({ id });
+    const record = await this.model.findOne({where: { id: id }});
     console.log('record', record);
     return record.update(data);
   }
