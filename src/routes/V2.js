@@ -191,3 +191,16 @@ async function handleGetUserChargers(req, res) {
   }
 }
 
+router.get('/:model/user-reservation/:id', bearerAuth, permissions('read'), handleGetUserReservation);
+
+async function handleGetUserReservation(req, res) {
+  try {
+    const userId = req.params.id; // Get the ID of the currently logged-in user
+    const userChargers = await req.model.getUserReservation(userId);
+    res.status(200).json(userChargers);
+  } catch (error) {
+    console.error('Error getting user chargers:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+

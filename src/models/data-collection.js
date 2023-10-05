@@ -53,6 +53,12 @@ class DataCollection {
     }
  
   
+    getUserReservation(userId) {
+      return this.model.findAll({
+        where: { Provider_id: userId },
+      });
+    }
+
   getProviderReservations(id, Provider,statusTime) {
     const currentTime = new Date();
     if (Provider == "Provider") {
