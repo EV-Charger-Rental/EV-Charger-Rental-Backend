@@ -59,15 +59,33 @@ class DataCollection {
       });
     }
 
-    handlePatch(id, data) {
-     const record =  this.model.findOne({ where: { id: id } });
-     if (!record) {
-       throw new Error('Record not found');
-     }
+  //   handlePatch(id, data) {
+  //    const record =  this.model.findOne({ where: { id: id } });
+  //    if (!record) {
+  //      throw new Error('Record not found');
+  //    }
    
-     return record.update(data);
-   }
+  //    return record.update(data);
+  //  }
 
+  async handlePatch(id, data) {
+    const record = await this.model.findOne({ where: { id: id } });
+    if (!record) {
+      throw new Error('Record not found');
+    }
+  
+    // Check if the 'status' field is present in the data and update it
+    if (data.status) {
+      record.setDataValue('status', data.status);
+    }
+  
+    // Save the updated record to the database
+    await record.save();
+  
+    return record;
+  }
+  
+  
   getProviderReservations(id, Provider,statusTime) {
     const currentTime = new Date();
     if (Provider == "Provider") {
