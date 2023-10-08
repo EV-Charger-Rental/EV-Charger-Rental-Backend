@@ -204,3 +204,17 @@ async function handleGetUserReservation(req, res) {
   }
 }
 
+router.patch('/:model/:id', handlePatch); // Add a PATCH route
+
+async function handlePatch(req, res) {
+  const id = req.params.id;
+  const obj = req.body;
+
+  try {
+    const updatedRecord = await req.model.handlePatch(id, obj); // Use the new handlePatch method
+    res.status(200).json(updatedRecord);
+  } catch (error) {
+    console.error('Error updating record:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
