@@ -59,6 +59,15 @@ class DataCollection {
       });
     }
 
+    handlePatch(id, data) {
+     const record =  this.model.findOne({ where: { id: id } });
+     if (!record) {
+       throw new Error('Record not found');
+     }
+   
+     return record.update(data);
+   }
+
   getProviderReservations(id, Provider,statusTime) {
     const currentTime = new Date();
     if (Provider == "Provider") {
@@ -74,6 +83,7 @@ class DataCollection {
         }
       });
     }
+    
 
     if (statusTime === "history") {
       return this.model.findAll({
