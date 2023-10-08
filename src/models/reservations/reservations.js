@@ -10,6 +10,7 @@ const reservationModel = (sequelize, DataTypes) => {
     start_time: { type: DataTypes.DATE, allowNull: false },
     end_time: { type: DataTypes.DATE, allowNull: false },
     total_price: { type: DataTypes.FLOAT, allowNull: true },
+    reservation_status: { type: DataTypes.STRING, allowNull: true }, 
   });
 
 
