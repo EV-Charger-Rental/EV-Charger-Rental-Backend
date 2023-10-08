@@ -74,11 +74,9 @@ class DataCollection {
       throw new Error('Record not found');
     }
   
-    // Update the record fields individually
-    for (const key in data) {
-      if (Object.hasOwnProperty.call(data, key)) {
-        record.setDataValue(key, data[key]);
-      }
+    // Check if the 'status' field is present in the data and update it
+    if (data.status) {
+      record.setDataValue('status', data.status);
     }
   
     // Save the updated record to the database
@@ -86,6 +84,7 @@ class DataCollection {
   
     return record;
   }
+  
   
   getProviderReservations(id, Provider,statusTime) {
     const currentTime = new Date();
