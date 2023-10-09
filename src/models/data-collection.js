@@ -42,7 +42,7 @@ class DataCollection {
       where: {
         status: availability,
         ChargerType: chargerType,
-        Chargerlocation: renterLocation
+        chargerAddress: renterLocation
       }
     })}
 
