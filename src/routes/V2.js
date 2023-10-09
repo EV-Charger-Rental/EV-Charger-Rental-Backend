@@ -264,7 +264,7 @@ async function handlePatch(req, res) {
 
 
 // Add a new route to search for reservations by renter_id
-router.get('/:model/user-reservation/renter/:id', bearerAuth, permissions('read'), handleGetReservationsByRenterId);
+router.get('/:model/renter/:id', bearerAuth, permissions('read'), handleGetReservationsByRenterId);
 
 // async function handleGetReservationsByRenterId(req, res) {
 //   try {
