@@ -240,7 +240,7 @@ router.get('/:model/user-reservation/renter/:id', bearerAuth, permissions('read'
 // }
 async function handleGetReservationsByRenterId(req, res) {
   try {
-    const renterId = req.params.id; // Get the renter_id from the URL parameter
+    const userId = req.params.id; // Get the renter_id from the URL parameter
     const reservations = await req.model.getReservationsByRenterId(userId);
 
     res.status(200).json(reservations);
