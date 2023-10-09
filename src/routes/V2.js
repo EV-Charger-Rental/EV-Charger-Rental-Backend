@@ -223,14 +223,25 @@ async function handlePatch(req, res) {
 // Add a new route to search for reservations by renter_id
 router.get('/:model/user-reservation/renter/:id', bearerAuth, permissions('read'), handleGetReservationsByRenterId);
 
+// async function handleGetReservationsByRenterId(req, res) {
+//   try {
+//     const renterId = req.params.id; // Get the renter_id from the URL parameter
+//     const reservations = await req.model.findAll({
+//       where: {
+//         renter_id: renterId,
+//       },
+//     });
+
+//     res.status(200).json(reservations);
+//   } catch (error) {
+//     console.error('Error getting reservations by renter_id:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// }
 async function handleGetReservationsByRenterId(req, res) {
   try {
     const renterId = req.params.id; // Get the renter_id from the URL parameter
-    const reservations = await req.model.findAll({
-      where: {
-        renter_id: renterId,
-      },
-    });
+    const reservations = await req.model.getReservationsByRenterId(userId);
 
     res.status(200).json(reservations);
   } catch (error) {
