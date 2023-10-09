@@ -67,6 +67,13 @@ class DataCollection {
    
   //    return record.update(data);
   //  }
+   getReservationsByRenterId(userId) {
+    return this.model.findAll({
+      where: {
+        renter_id: userId,
+      },
+    });
+  }
 
   async handlePatch(id, data) {
     const record = await this.model.findOne({ where: { id: id } });
