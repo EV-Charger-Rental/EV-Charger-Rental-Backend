@@ -9,6 +9,11 @@ const reservationModel = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: true,
     },
+    reservation_status: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: 'open', 
+    },
   }, {
     // Other model options
   });
