@@ -93,59 +93,59 @@ class DataCollection {
   }
   
   
-  getProviderReservations(id, Provider,statusTime) {
-    const currentTime = new Date();
-    if (Provider == "Provider") {
+  // getProviderReservations(id, Provider,statusTime) {
+  //   const currentTime = new Date();
+  //   if (Provider == "Provider") {
   
-  if (statusTime === "now") {
-      return this.model.findAll({
-        where: {
-          Provider_id: id,
-          total_price: null,
-          start_time: {
-            [Op.gt]: currentTime,
-          }
-        }
-      });
-    }
+  // if (statusTime === "now") {
+  //     return this.model.findAll({
+  //       where: {
+  //         Provider_id: id,
+  //         total_price: null,
+  //         start_time: {
+  //           [Op.gt]: currentTime,
+  //         }
+  //       }
+  //     });
+  //   }
     
 
-    if (statusTime === "history") {
-      return this.model.findAll({
-        where: {
-          Provider_id: id,
-          total_price: { [Op.ne]: null },
-        }
-      });
-    }
-  }
+  //   if (statusTime === "history") {
+  //     return this.model.findAll({
+  //       where: {
+  //         Provider_id: id,
+  //         total_price: { [Op.ne]: null },
+  //       }
+  //     });
+  //   }
+  // }
   
     
 
-    else {
-     if (statusTime === "now") {
-      return this.model.findAll({
-        where: {
-          renter_id: id,
-          total_price: null,
-          start_time: {
-            [Op.gt]: currentTime,
-          }
-        }
-      });
-    }
+  //   else {
+  //    if (statusTime === "now") {
+  //     return this.model.findAll({
+  //       where: {
+  //         renter_id: id,
+  //         total_price: null,
+  //         start_time: {
+  //           [Op.gt]: currentTime,
+  //         }
+  //       }
+  //     });
+  //   }
 
-    if (statusTime === "history") {
-      return this.model.findAll({
-        where: {
-          renter_id: id,
-          total_price: { [Op.ne]: null },
-        }
-      });
-    }
-  }
+  //   if (statusTime === "history") {
+  //     return this.model.findAll({
+  //       where: {
+  //         renter_id: id,
+  //         total_price: { [Op.ne]: null },
+  //       }
+  //     });
+  //   }
+  // }
 
-}}
+}
 
 
 
