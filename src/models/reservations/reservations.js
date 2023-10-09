@@ -21,7 +21,7 @@ const reservationModel = (sequelize, DataTypes) => sequelize.define('Reservation
           const totalHours = endHour - startHour;
 
           // Fetch the charger's price from the Charger model
-          const Charger = sequelize.models.Charger;
+          const Charger = sequelize.models.charger;
           const charger = await Charger.findByPk(this.getDataValue('charger_id'));
 
           if (charger) {
