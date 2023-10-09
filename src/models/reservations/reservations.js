@@ -7,13 +7,13 @@ const reservationModel = (sequelize, DataTypes) => {
     renter_id: { type: DataTypes.INTEGER, allowNull: false },
     Provider_id: { type: DataTypes.INTEGER, allowNull: false },
     creation_date: { type: DataTypes.DATE, allowNull: true },
-    start_time: { type: DataTypes.DATE, allowNull: false },
-    end_time: { type: DataTypes.DATE, allowNull: false },
+    start_time: { type: DataTypes.STRING, allowNull: false }, // Change data type to STRING
+    end_time: { type: DataTypes.STRING, allowNull: false },   // Change data type to STRING
     total_price: { type: DataTypes.FLOAT, allowNull: true },
     reservation_status: {
       type: DataTypes.STRING,
       allowNull: true,
-      defaultValue: 'open', 
+      defaultValue: 'open',
     },
   });
 
@@ -29,11 +29,15 @@ const reservationModel = (sequelize, DataTypes) => {
 
     if (chargerInstance) {
       const unitPrice = chargerInstance.price;
-      const start = dayjs(reservation.start_time);
-      const end = dayjs(reservation.end_time);
+      const startTime = dayjs(reservation.start_time, 'HH:mm').format('HH:mm'); // Ensure proper formatting
+      const endTime = dayjs(reservation.end_time, 'HH:mm').format('HH:mm');     // Ensure proper formatting
+      const start = dayjs(startTime, 'HH:mm');
+      const end = dayjs(endTime, 'HH:mm');
       const duration = end.diff(start, 'hour');
       const price = duration * unitPrice;
       reservation.setDataValue('total_price', parseFloat(price));
+      reservation.setDataValue('start_time', `${startTime}-${endTime}`); // Format as "00:00-23:59"
+      reservation.setDataValue('end_time', '23:59'); // Set end_time to 23:59 as requested
     }
   });
 
@@ -41,5 +45,3 @@ const reservationModel = (sequelize, DataTypes) => {
 };
 
 module.exports = reservationModel;
-
-
