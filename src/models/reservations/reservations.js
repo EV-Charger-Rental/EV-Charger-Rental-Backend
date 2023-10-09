@@ -17,30 +17,6 @@ const reservationModel = (sequelize, DataTypes) => {
     },
   });
 
-  Reservation.addHook('beforeCreate', async (reservation) => {
-    console.log('reservation============>', reservation);
-    const now = dayjs();
-    const formattedTime = now.format('YYYY-MM-DD HH:mm:ss');
-    reservation.setDataValue('creation_date', formattedTime);
-
-    const chargerInstance = await sequelize.models.Charger.findOne({
-      where: { id: reservation.charger_id }
-    });
-
-    if (chargerInstance) {
-      const unitPrice = chargerInstance.price;
-      const startTime = dayjs(reservation.start_time, 'HH:mm').format('HH:mm'); // Ensure proper formatting
-      const endTime = dayjs(reservation.end_time, 'HH:mm').format('HH:mm');     // Ensure proper formatting
-      const start = dayjs(startTime, 'HH:mm');
-      const end = dayjs(endTime, 'HH:mm');
-      const duration = end.diff(start, 'hour');
-      const price = duration * unitPrice;
-      reservation.setDataValue('total_price', parseFloat(price));
-      reservation.setDataValue('start_time', `${startTime}-${endTime}`); // Format as "00:00-23:59"
-      reservation.setDataValue('end_time', '23:59'); // Set end_time to 23:59 as requested
-    }
-  });
-
   return Reservation;
 };
 
