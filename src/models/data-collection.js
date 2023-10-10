@@ -7,7 +7,7 @@ class DataCollection {
     this.model = model;
     this.Op = Op;
   }
-
+ 
   get(id) {
     if (id) {
       return this.model.findOne({ where: { id: id } });
