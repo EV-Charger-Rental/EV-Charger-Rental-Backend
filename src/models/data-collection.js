@@ -24,7 +24,7 @@ class DataCollection {
   update = async (id, data) => {
     console.log('id', id);
     console.log('data', data);
-    const record = await this.model.findOne({ id });
+    const record = await this.model.findOne({where: { id: id }});
     console.log('record', record);
     return record.update(data);
   }
@@ -42,7 +42,7 @@ class DataCollection {
       where: {
         status: availability,
         ChargerType: chargerType,
-        Chargerlocation: renterLocation
+        chargerAddress: renterLocation
       }
     })}
 
@@ -53,58 +53,99 @@ class DataCollection {
     }
  
   
-  getProviderReservations(id, Provider,statusTime) {
-    const currentTime = new Date();
-    if (Provider == "Provider") {
-  
-  if (statusTime === "now") {
+    getUserReservation(userId) {
       return this.model.findAll({
-        where: {
-          Provider_id: id,
-          total_price: null,
-          start_time: {
-            [Op.gt]: currentTime,
-          }
-        }
+        where: { Provider_id: userId },
       });
     }
 
-    if (statusTime === "history") {
-      return this.model.findAll({
-        where: {
-          Provider_id: id,
-          total_price: { [Op.ne]: null },
-        }
-      });
-    }
+  //   handlePatch(id, data) {
+  //    const record =  this.model.findOne({ where: { id: id } });
+  //    if (!record) {
+  //      throw new Error('Record not found');
+  //    }
+   
+  //    return record.update(data);
+  //  }
+   getReservationsByRenterId(userId) {
+    return this.model.findAll({
+      where: {
+        renter_id: userId,
+      },
+    });
   }
+
+  async handlePatch(id, data) {
+    const record = await this.model.findOne({ where: { id: id } });
+    if (!record) {
+      throw new Error('Record not found');
+    }
+  
+    // Check if the 'status' field is present in the data and update it
+    if (data.status) {
+      record.setDataValue('status', data.status);
+    }
+  
+    // Save the updated record to the database
+    await record.save();
+  
+    return record;
+  }
+  
+  
+  // getProviderReservations(id, Provider,statusTime) {
+  //   const currentTime = new Date();
+  //   if (Provider == "Provider") {
+  
+  // if (statusTime === "now") {
+  //     return this.model.findAll({
+  //       where: {
+  //         Provider_id: id,
+  //         total_price: null,
+  //         start_time: {
+  //           [Op.gt]: currentTime,
+  //         }
+  //       }
+  //     });
+  //   }
+    
+
+  //   if (statusTime === "history") {
+  //     return this.model.findAll({
+  //       where: {
+  //         Provider_id: id,
+  //         total_price: { [Op.ne]: null },
+  //       }
+  //     });
+  //   }
+  // }
   
     
 
-    else {
-     if (statusTime === "now") {
-      return this.model.findAll({
-        where: {
-          renter_id: id,
-          total_price: null,
-          start_time: {
-            [Op.gt]: currentTime,
-          }
-        }
-      });
-    }
+  //   else {
+  //    if (statusTime === "now") {
+  //     return this.model.findAll({
+  //       where: {
+  //         renter_id: id,
+  //         total_price: null,
+  //         start_time: {
+  //           [Op.gt]: currentTime,
+  //         }
+  //       }
+  //     });
+  //   }
 
-    if (statusTime === "history") {
-      return this.model.findAll({
-        where: {
-          renter_id: id,
-          total_price: { [Op.ne]: null },
-        }
-      });
-    }
-  }
+  //   if (statusTime === "history") {
+  //     return this.model.findAll({
+  //       where: {
+  //         renter_id: id,
+  //         total_price: { [Op.ne]: null },
+  //       }
+  //     });
+  //   }
+  // }
 
-}}
+}
 
 
 

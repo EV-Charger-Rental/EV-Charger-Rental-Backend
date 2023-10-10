@@ -32,15 +32,26 @@ router.get('/:model/:id/:renter/:statusTime/plugTime', bearerAuth, permissions('
 
 
 async function handleGetAll(req, res) {
-  let allRecords = await req.model.get();
-  res.status(200).json(allRecords);
+  try {
+    let allRecords = await req.model.get();
+    res.status(200).json(allRecords);
+  } catch (error) {
+    console.error('Error getting all records:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 async function handleGetOne(req, res) {
-  const id = req.params.id;
-  let theRecord = await req.model.get(id)
-  res.status(200).json(theRecord);
+  try {
+    const id = req.params.id;
+    let theRecord = await req.model.get(id);
+    res.status(200).json(theRecord);
+  } catch (error) {
+    console.error('Error getting one record:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
+
 
 // async function handleCreate(req, res) {
 //   let obj = req.body;
@@ -50,27 +61,42 @@ async function handleGetOne(req, res) {
 
 
 async function handleCreate(req, res) {
-  let obj = req.body;
-  console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaa", obj);
-  let newRecord = await req.model.create(obj);
-  console.log("bbbbbbbbbbbbb", obj);
-  res.status(201).json(newRecord);
-
- 
+  try {
+    let obj = req.body;
+    console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaaa", obj);
+    let newRecord = await req.model.create(obj);
+    console.log("bbbbbbbbbbbbb", obj);
+    res.status(201).json(newRecord);
+  } catch (error) {
+    console.error('Error creating a record:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
+
 async function handleUpdate(req, res) {
-  const id = req.params.id;
-  const obj = req.body;
-  let updatedRecord = await req.model.update(id, obj)
-  res.status(200).json(updatedRecord);
+  try {
+    const id = req.params.id;
+    const obj = req.body;
+    let updatedRecord = await req.model.update(id, obj);
+    res.status(200).json(updatedRecord);
+  } catch (error) {
+    console.error('Error updating a record:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 async function handleDelete(req, res) {
-  let id = req.params.id;
-  let deletedRecord = await req.model.delete(id);
-  res.status(200).json(deletedRecord);
+  try {
+    let id = req.params.id;
+    let deletedRecord = await req.model.delete(id);
+    res.status(200).json(deletedRecord);
+  } catch (error) {
+    console.error('Error deleting a record:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
+
 
 
 // async function handleGetOneBasedOntime(req, res) {
@@ -83,31 +109,48 @@ async function handleDelete(req, res) {
 
 
 async function handleGetChargers(req, res) {
-  const renterLocation = req.params.renterLocation;
-  const availability = req.params.availability;
-  const chargerType = req.params.chargerType;
-  console.log(availability, chargerType)
-  let theRecord = await req.model.getChargers(renterLocation, availability, chargerType);
-  res.json(theRecord);
+  try {
+    const renterLocation = req.params.renterLocation;
+    const availability = req.params.availability;
+    const chargerType = req.params.chargerType;
+    console.log(availability, chargerType)
+    let theRecord = await req.model.getChargers(renterLocation, availability, chargerType);
+    res.json(theRecord);
+  } catch (error) {
+    console.error('Error getting chargers:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
 
 
 async function handleGetAllProviderReservations(req, res) {
-  const id = req.params.id;
-  const statusTime = req.params.statusTime;
-  const Provider= req.params.Provider;
-  let theRecord = await req.model.getProviderReservations(id, Provider,statusTime)
-  res.status(200).json(theRecord);
+  try {
+    const id = req.params.id;
+    const statusTime = req.params.statusTime;
+    const Provider = req.params.Provider;
+    let theRecord = await req.model.getProviderReservations(id, Provider, statusTime);
+    res.status(200).json(theRecord);
+  } catch (error) {
+    console.error('Error getting provider reservations:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
+
 
 
 async function handleGetAllRenterReservations(req, res) {
-  const id = req.params.id;
-  const statusTime = req.params.statusTime;
-  const renter = req.params.renter;
-  let theRecord = await req.model.getProviderReservations(id, renter,statusTime)
-  res.status(200).json(theRecord);
+  try {
+    const id = req.params.id;
+    const statusTime = req.params.statusTime;
+    const renter = req.params.renter;
+    let theRecord = await req.model.getProviderReservations(id, renter, statusTime);
+    res.status(200).json(theRecord);
+  } catch (error) {
+    console.error('Error getting renter reservations:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 }
+
 
 // Add a route to check if a username is available
 router.post('/check-username', checkUsernameAvailability);
@@ -191,3 +234,61 @@ async function handleGetUserChargers(req, res) {
   }
 }
 
+router.get('/:model/user-reservation/:id', bearerAuth, permissions('read'), handleGetUserReservation);
+
+async function handleGetUserReservation(req, res) {
+  try {
+    const userId = req.params.id; // Get the ID of the currently logged-in user
+    const userChargers = await req.model.getUserReservation(userId);
+    res.status(200).json(userChargers);
+  } catch (error) {
+    console.error('Error getting user chargers:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+router.patch('/:model/:id', handlePatch); // Add a PATCH route
+
+async function handlePatch(req, res) {
+  const id = req.params.id;
+  const obj = req.body;
+
+  try {
+    const updatedRecord = await req.model.handlePatch(id, obj); // Use the new handlePatch method
+    res.status(200).json(updatedRecord);
+  } catch (error) {
+    console.error('Error updating record:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
+
+
+// Add a new route to search for reservations by renter_id
+router.get('/:model/renter/:id', bearerAuth, permissions('read'), handleGetReservationsByRenterId);
+
+// async function handleGetReservationsByRenterId(req, res) {
+//   try {
+//     const renterId = req.params.id; // Get the renter_id from the URL parameter
+//     const reservations = await req.model.findAll({
+//       where: {
+//         renter_id: renterId,
+//       },
+//     });
+
+//     res.status(200).json(reservations);
+//   } catch (error) {
+//     console.error('Error getting reservations by renter_id:', error);
+//     res.status(500).json({ message: 'Internal server error' });
+//   }
+// }
+async function handleGetReservationsByRenterId(req, res) {
+  try {
+    const userId = req.params.id; // Get the renter_id from the URL parameter
+    const reservations = await req.model.getReservationsByRenterId(userId);
+
+    res.status(200).json(reservations);
+  } catch (error) {
+    console.error('Error getting reservations by renter_id:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+}
