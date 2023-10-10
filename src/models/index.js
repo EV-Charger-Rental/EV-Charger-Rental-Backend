@@ -9,6 +9,11 @@ const userModel = require('./users/users.js');
 const messagesModel=require('./messagesTable/messages.js');
 const roomsModel=require('./rooms/rooms.js');
 const privateMessagesModel=require('./messagesTable/privateMessages.js');
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const converationsModal = require('./newMesagesTables/conversations.js');
+const newMessagesModal = require('./newMesagesTables/newMessages.js');
+const participantsModal = require('./newMesagesTables/participants .js');
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 const Collection = require('./data-collection.js');
 
 
@@ -33,6 +38,10 @@ const reservation = reservationModel(sequelize, DataTypes);
 const messages=messagesModel(sequelize,DataTypes);
 const rooms=roomsModel(sequelize,DataTypes);
 const privateMessages=privateMessagesModel(sequelize,DataTypes);
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+const conversations = converationsModal(sequelize, DataTypes);
+const newMessages = newMessagesModal(sequelize, DataTypes);
+const participants = participantsModal(sequelize, DataTypes);
 
 
 users.hasMany(reviews, { foreignKey: 'reviewer_id', sourceKey: 'id' });
@@ -61,6 +70,29 @@ rooms.belongsTo(messages,{foreignKey:'room_id',targetKey:'id'});
 users.hasMany(privateMessages,{foreignKey:'sender',sourceKey:'username'});
 privateMessages.belongsTo(users,{foreignKey:'sender',targetKey:'username'});
 
+// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+users.hasMany(participants, { foreignKey: 'userId', sourceKey: 'id' });
+participants.belongsTo(users, { foreignKey: 'userId', targetKey: 'id' });
+
+// users.hasMany(participants, { foreignKey: 'userName', sourceKey: 'username' });
+// participants.belongsTo(users, { foreignKey: 'userName', targetKey: 'username' });
+
+conversations.hasMany(participants, { foreignKey: 'conversationId', sourceKey: 'id' });
+participants.belongsTo(conversations, { foreignKey: 'conversationId', targetKey: 'id' });
+
+conversations.hasMany(newMessages, { foreignKey: 'conversationId', sourceKey: 'id' });
+newMessages.belongsTo(conversations, { foreignKey: 'conversationId', targetKey: 'id' });
+
+
+users.hasMany(newMessages, { foreignKey: 'senderId', sourceKey: 'id' });
+newMessages.belongsTo(users, { foreignKey: 'senderId', targetKey: 'id' });
+
+users.hasMany(newMessages, { foreignKey: 'recieverId', sourceKey: 'id' });
+newMessages.belongsTo(users, { foreignKey: 'recieverId', targetKey: 'id' });
+
+
+
+
 
 
 module.exports = {
@@ -75,4 +107,8 @@ module.exports = {
   messagesModal: messages,
   roomsModal: rooms,
   privateMessagesModal: privateMessages,
+  //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    conversationsModal: conversations,
+    newMessagesModal: newMessages,
+    participantsModal: participants,
 };
