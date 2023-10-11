@@ -219,8 +219,7 @@ io.on('connection', socket => {
 // new peer to peer socket.io
 
 const newConnectedClients = {};
-const socketToUserMap = {};
-const userToSocketMap = {};
+
 
 newPeerToPeer.on('connection', socket => {
 
@@ -294,6 +293,14 @@ newPeerToPeer.on('connection', socket => {
       status: conversation.conversationData.participants[1].status,
     });
 
+    // check if  the user is connected 
+    let status 
+
+    if (newConnectedClients[conversation.conversationData.participants[0].name]) {
+      status = 'seen';
+    }else{
+      status = 'unseen';
+    }
 
     let newMessage = await newMessagesModal.create({
       body: conversation.conversationData.messages[0].body,
@@ -302,6 +309,7 @@ newPeerToPeer.on('connection', socket => {
       senderId: conversation.conversationData.messages[0].senderId,
       recieverId: conversation.conversationData.participants[0].id,
       conversationId: newConversation.dataValues.id,
+      status:status,
     });
 
     let partecipents = await participantsModal.findAll({
@@ -325,6 +333,23 @@ newPeerToPeer.on('connection', socket => {
     if (newConnectedClients[reciever]) {
       newConnectedClients[reciever].emit('new-recieved-conversation-created');
     }
+
+    // if the user is not connected increase the unreadCount in the conversation table by one 
+   
+    // if(!newConnectedClients[reciever]){
+    //   let conversationToUpdate = await conversationsModal.findOne({
+    //     where: {
+    //       id: newConversation.dataValues.id,
+    //     }
+    //   });
+    //   let unreadCount = conversationToUpdate.dataValues.unreadCount;
+    //   unreadCount++;
+    //   await conversationsModal.update({ unreadCount: unreadCount }, {
+    //     where: {
+    //       id: newConversation.dataValues.id,
+    //     }
+    //   });
+    // }
 
   });
 
@@ -507,6 +532,14 @@ newPeerToPeer.on('connection', socket => {
       id:recieverId.dataValues.userId,
     }
   });
+
+  // check if the user is connected
+  let status
+  if (newConnectedClients[recieverName.username]) {
+    status = 'seen';
+  }else{
+    status = 'unseen';
+  }
   
     let modifiedMsgObj={
       body:conversation.body,
@@ -515,6 +548,7 @@ newPeerToPeer.on('connection', socket => {
       senderId:conversation.senderId,
       recieverId:recieverId.dataValues.userId,
       conversationId:conversation.id,
+      status:status,
 
     }
 
@@ -536,22 +570,51 @@ newPeerToPeer.on('connection', socket => {
 
   });
 
+  socket.on('click-conversation', async (data) => {
+    let { conversationId, userId }= data
+    let conversationToUpdate = await conversationsModal.findOne({
+      where: {
+        id: conversationId,
+      }
+    });
+    //convert messages staus from unseen to seen
 
-  socket.on('checkout user', () => {
-    const name = socketToUserMap[socket.id];
-    if (name) {
-        delete newConnectedClients[name];
-        // delete socketToUserMap[socket.id];
-        // delete userToSocketMap[name];
+    let messages = await newMessagesModal.findAll({
+      where: {
+        conversationId: conversationId,
+        recieverId: userId,
+      }
+    });
+
+    let updatedMessages = messages.map(async (message) => {
+      let updatedMessage = await newMessagesModal.update({ status: 'seen' }, {
+        where: {
+          id: message.dataValues.id,
+        }
+      });
+    });
+
+    socket.emit('update-clicked-conversation');
+
+  
+ 
+  });
+
+
+//   socket.on('checkout user', () => {
+//     const name = socketToUserMap[socket.id];
+//     if (name) {
+//         delete newConnectedClients[name];
+     
+//     }
+// });
+
+
+  socket.on('checkout user', name => {
+    if (newConnectedClients[name]) {
+      delete newConnectedClients[name];
     }
-});
-
-
-  // socket.on('checkout user', name => {
-  //   if (newConnectedClients[name]) {
-  //     delete newConnectedClients[name];
-  //   }
-  // });
+  });
   socket.on('disconnect', () => {
     //delete the user from newConnectedClients
     console.log('user disconnected');

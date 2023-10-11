@@ -33,6 +33,10 @@ const messagesModal = (sequelize, DataTypes) => sequelize.define('NewMessages', 
     conversationId: {
         type: DataTypes.INTEGER,
         required: true
-    }
+    },
+    status: {
+        type: DataTypes.ENUM('unseen', 'seen'),
+        required: false
+    },
     });
 module.exports = messagesModal;
